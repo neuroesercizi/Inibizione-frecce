@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flanker Task con Shifting Esecutivo - Riabilitazione Cognitiva</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            amber: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            },
+            emerald: {
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Prevent selection and optimize touch responsiveness */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    input, textarea {
+      user-select: auto;
+    }
+    @keyframes pulseAlert {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.04); opacity: 0.9; }
+    }
+    .animate-alert {
+      animation: pulseAlert 1s infinite ease-in-out;
+    }
+    /* Arrow rendering clarity */
+    .arrow-icon {
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+      transition: transform 0.08s ease-out;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- APPLICATION HEADER                                                        -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center shadow-lg shadow-brand-500/20 font-bold text-white text-base font-mono">
+          ⇄
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            Flanker Task con Shifting
+            <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20 font-mono font-medium">Inibizione &amp; Flessibilità</span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">Valutazione e potenziamento dell'attenzione selettiva e del controllo esecutivo</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button id="nav-btn-instructions" class="text-xs sm:text-sm px-3 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-300 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="hidden sm:inline">Guida</span> Regole
+        </button>
+        <div id="status-pill" class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 font-mono border border-slate-700/60">
+          In Attesa
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: SETUP SCREEN / PANNELLO CONFIGURAZIONE CLINICA                    -->
+    <!-- ========================================================================= -->
+    <section id="view-setup" class="w-full max-w-4xl mx-auto space-y-6">
+      
+      <!-- Session & Patient Metadata Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7 7z"/></svg>
+              Anagrafica &amp; Tracciamento Clinico
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Identificativo del partecipante o sigla del gruppo per il calcolo del Costo di Shifting</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              Gruppo Avanzato / Adulti
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+          <div>
+            <label for="cfg-patient-id" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Codice Paziente / Gruppo</label>
+            <input type="text" id="cfg-patient-id" value="PAZIENTE-FT-01" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 font-mono">
+          </div>
+          <div>
+            <label for="cfg-session-date" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Data Valutazione</label>
+            <input type="date" id="cfg-session-date" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 font-mono">
+          </div>
+          <div>
+            <label for="cfg-clinician-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Operatore / Clinico</label>
+            <input type="text" id="cfg-clinician-name" value="Operatore Neuropsicologia" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-brand-500">
+          </div>
+        </div>
+      </div>
+
+      <!-- Execution Parameters (Durations, Rules & Timing) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Left: Phase Durations & Structure -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Architettura Temporale delle Fasi
+          </h3>
+
+          <!-- Durata Fase 1 e Fase 2 -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="cfg-duration-p1" class="block text-xs font-medium text-slate-300 mb-1">Durata FASE 1 (Diretta)</label>
+              <select id="cfg-duration-p1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                <option value="60">1 Minuto (Breve)</option>
+                <option value="120" selected>2 Minuti (Standard)</option>
+                <option value="180">3 Minuti (Esteso)</option>
+              </select>
+            </div>
+            <div>
+              <label for="cfg-duration-p2" class="block text-xs font-medium text-slate-300 mb-1">Durata FASE 2 (Opposta)</label>
+              <select id="cfg-duration-p2" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                <option value="60">1 Minuto (Breve)</option>
+                <option value="120" selected>2 Minuti (Standard)</option>
+                <option value="180">3 Minuti (Esteso)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Spiegazione Regola Shifting -->
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+              <span class="w-5 h-5 rounded bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">1</span>
+              <div>
+                <strong class="text-slate-200">Fase 1 (Regola Coerente / Diretta):</strong>
+                <p class="text-slate-400">Guarda la freccia centrale. Rispondi nella <u>stessa direzione</u> indicata (← premi Sinistra, → premi Destra).</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2 border-t border-slate-800/80 pt-2">
+              <span class="w-5 h-5 rounded bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">2</span>
+              <div>
+                <strong class="text-slate-200">Fase 2 (Regola Invertita / Shifting):</strong>
+                <p class="text-slate-400">Pausa di switch automatica di 5 sec. Poi rispondi nella <u>direzione opposta</u> (← premi Destra, → premi Sinistra).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feedback visivo immediato toggle -->
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-xs text-slate-400">Feedback visivo discreto sui click (flash verde/rosso)</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="cfg-visual-feedback" class="sr-only peer" checked>
+              <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Right: Stimulus Timing & Technical Parameters -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Parametri Psicometrici &amp; Input
+          </h3>
+
+          <!-- Timeout di Risposta (Max Response Window) -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="cfg-timeout-ms" class="block text-xs text-slate-400 mb-1">Finestra Massima Risposta</label>
+              <select id="cfg-timeout-ms" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                <option value="1500">1500 ms (Rapido)</option>
+                <option value="2000" selected>2000 ms (Standard)</option>
+                <option value="2500">2500 ms (Facilitato)</option>
+              </select>
+            </div>
+            <div>
+              <label for="cfg-isi-jitter" class="block text-xs text-slate-400 mb-1">Intervallo Fissazione (ISI)</label>
+              <select id="cfg-isi-jitter" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                <option value="fixed">500 ms fisso</option>
+                <option value="jitter" selected>400 - 800 ms (Jittered)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Percentuale Prove Incongruenti (Conflitto) -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Rapporto Condizioni di Conflitto</label>
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs font-mono">
+              <span class="text-emerald-400 font-semibold">50% Congruenti (←←←←← / →→→→→)</span>
+              <span class="text-rose-400 font-semibold">50% Incongruenti (←←→←← / →→←→→)</span>
+            </div>
+          </div>
+
+          <!-- Canali di Input Disponibili -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Modalità di Risposta Abilitate</label>
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs text-slate-300">
+              <span class="flex items-center gap-1.5">
+                <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 font-mono text-[11px]">←</kbd>
+                <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 font-mono text-[11px]">→</kbd>
+                Trecce Tastiera
+              </span>
+              <span class="text-slate-500">•</span>
+              <span>Pulsanti Grandi Touchscreen a Schermo</span>
+            </div>
+          </div>
+
+          <!-- Audio Beep Feedback -->
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-xs text-slate-400">Avvisi sonori (cambio fase e click)</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="cfg-audio-feedback" class="sr-only peer" checked>
+              <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-500"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button: Launch Task -->
+      <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-xs text-slate-400 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          Pronto per la somministrazione
+        </div>
+        <button id="btn-start-test" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 via-indigo-600 to-amber-600 hover:from-brand-500 hover:to-amber-500 font-bold text-white shadow-lg shadow-brand-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 text-base">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          AVVIA FLANKER TASK CON SHIFTING
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: TEST EXECUTION SCREEN / SCHERMATA DI ESECUZIONE ATTIVA            -->
+    <!-- ========================================================================= -->
+    <section id="view-test" class="hidden w-full max-w-5xl mx-auto flex-1 flex flex-col justify-between py-2 sm:py-4">
+      
+      <!-- Top Test Status Bar -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl px-5 py-3.5 backdrop-blur-md flex items-center justify-between shadow-lg">
+        
+        <!-- Phase Indicator Badge -->
+        <div class="flex items-center space-x-3">
+          <div id="test-phase-badge" class="px-3 py-1 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs sm:text-sm font-bold font-mono uppercase tracking-wide flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="test-phase-text">FASE 1: RISPOSTA DIRETTA</span>
+          </div>
+          <div class="hidden md:block text-xs text-slate-400 font-mono" id="test-rule-reminder">
+            (Freccia centrale = stessa direzione)
+          </div>
+        </div>
+
+        <!-- Global Timer & Progress -->
+        <div class="flex items-center space-x-4">
+          <div class="text-right">
+            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Tempo Fase</span>
+            <span id="test-timer-display" class="text-base sm:text-lg font-bold font-mono text-white">02:00</span>
+          </div>
+          <div class="h-7 w-px bg-slate-800"></div>
+          <div>
+            <button id="btn-abort-test" class="p-2 rounded-xl border border-rose-900/50 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 transition" title="Interrompi Sessione">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Visual Array Container -->
+      <div id="flanker-card" class="my-6 flex-1 flex flex-col items-center justify-center min-h-[320px] sm:min-h-[420px] bg-slate-900/50 border border-slate-800 rounded-3xl p-6 sm:p-12 relative overflow-hidden transition-all duration-150">
+        
+        <!-- Fixation Cross (+) -->
+        <div id="fixation-cross" class="text-slate-500 text-6xl font-light select-none transition-opacity duration-75">
+          +
+        </div>
+
+        <!-- Flanker Stimuli Array (5 Arrows) -->
+        <div id="flanker-array" class="hidden flex items-center justify-center space-x-3 sm:space-x-6 text-slate-100">
+          <!-- 5 arrows inserted dynamically -->
+        </div>
+
+        <!-- Subtle Feedback Dot -->
+        <div id="feedback-dot" class="mt-8 w-3 h-3 rounded-full opacity-0 transition-opacity duration-150"></div>
+
+        <!-- ========================================================================= -->
+        <!-- SHIFTING TRANSITION OVERLAY (5 SECONDS MODAL)                             -->
+        <!-- ========================================================================= -->
+        <div id="shift-overlay" class="hidden absolute inset-0 bg-slate-950/95 backdrop-blur-xl z-30 flex flex-col items-center justify-center p-6 text-center animate-alert">
+          <div class="w-20 h-20 rounded-3xl bg-amber-500/20 border-2 border-amber-500/40 text-amber-400 flex items-center justify-center mb-5 shadow-2xl shadow-amber-500/20">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          </div>
+          <span class="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 mb-2">
+            ATTENZIONE! CAMBIO DI REGOLA (SHIFTING)
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-black text-white mb-3">
+            DA ORA IN POI: RISPONDI AL CONTRARIO!
+          </h2>
+          <div class="max-w-md bg-slate-900 border border-amber-500/30 rounded-2xl p-4 text-xs sm:text-sm text-slate-300 leading-relaxed space-y-2 mb-6">
+            <p>Guarda sempre la <strong>freccia al centro</strong>, ma premi il pulsante nella <u>direzione opposta</u>:</p>
+            <div class="flex items-center justify-around font-mono text-amber-300 font-bold text-sm pt-1">
+              <span>Se punta a SINISTRA (←) → premi DESTRA</span>
+              <span>•</span>
+              <span>Se punta a DESTRA (→) → premi SINISTRA</span>
+            </div>
+          </div>
+          
+          <div class="text-slate-400 text-xs font-mono">
+            Riavvio automatico tra <span id="shift-countdown" class="text-amber-400 font-bold text-lg">5</span> secondi...
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Large Interactive Response Buttons (Touch / Mouse / Keyboard Visual) -->
+      <div class="grid grid-cols-2 gap-4 max-w-xl mx-auto w-full">
+        <button id="btn-resp-left" class="py-5 px-6 rounded-2xl bg-slate-900 border-2 border-slate-700/80 hover:border-brand-500 active:bg-brand-600/20 text-white font-extrabold text-lg sm:text-xl shadow-xl transition-all flex flex-col items-center justify-center gap-1 active:scale-95 group">
+          <div class="flex items-center gap-2">
+            <svg class="w-8 h-8 text-brand-400 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>SINISTRA</span>
+          </div>
+          <span class="text-[11px] font-mono text-slate-400 font-normal">Tasto [ ← ] Freccia Sinistra</span>
+        </button>
+
+        <button id="btn-resp-right" class="py-5 px-6 rounded-2xl bg-slate-900 border-2 border-slate-700/80 hover:border-brand-500 active:bg-brand-600/20 text-white font-extrabold text-lg sm:text-xl shadow-xl transition-all flex flex-col items-center justify-center gap-1 active:scale-95 group">
+          <div class="flex items-center gap-2">
+            <span>DESTRA</span>
+            <svg class="w-8 h-8 text-brand-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </div>
+          <span class="text-[11px] font-mono text-slate-400 font-normal">Tasto [ → ] Freccia Destra</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 3: CLINICAL REPORT SCREEN / SCHERMATA REPORT & ANALISI               -->
+    <!-- ========================================================================= -->
+    <section id="view-report" class="hidden w-full max-w-5xl mx-auto space-y-6 py-2">
+      
+      <!-- Report Header & Controls -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Sessione Conclusa</span>
+            <span id="report-date-badge" class="text-xs text-slate-400 font-mono"></span>
+          </div>
+          <h2 class="text-2xl font-black text-white">Report Neuropsicologico: Flanker con Shifting</h2>
+          <p class="text-xs text-slate-400">Paziente: <span id="report-patient-label" class="text-slate-200 font-semibold font-mono"></span> • Clinico: <span id="report-clinician-label" class="text-slate-200"></span></p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btn-copy-report" class="px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-800 text-slate-200 text-xs sm:text-sm font-semibold transition flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+            Copia Appunti
+          </button>
+          <button id="btn-print-report" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs sm:text-sm font-semibold transition flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Stampa / PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Core Executive Cost Cards (Shifting Cost & Flanker Interference) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Card 1: Switch / Shifting Cost -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+              Costo di Shifting (Switch Cost)
+            </span>
+            <span class="text-[11px] font-mono text-slate-400">Fase 2 (Opposta) − Fase 1 (Diretta)</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="rep-switch-cost-rt" class="text-4xl font-black text-white font-mono">+ 0</span>
+            <span class="text-sm font-mono text-slate-400">ms di rallentamento esecutivo</span>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span class="text-slate-400">Delta di Errore (Accuratezza):</span>
+            <span id="rep-switch-cost-acc" class="font-bold font-mono text-amber-400">0%</span>
+          </div>
+          <p class="text-[10px] text-slate-500 mt-1">Rappresenta l'onere cognitivo richiesto dalla corteccia prefrontale per inibire la regola automatica precedente.</p>
+        </div>
+
+        <!-- Card 2: Flanker Conflict Interference Cost -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-400 flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Effetto Flanker (Interferenza Spaziale)
+            </span>
+            <span class="text-[11px] font-mono text-slate-400">Incongruenti − Congruenti</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="rep-flanker-cost-rt" class="text-4xl font-black text-white font-mono">+ 0</span>
+            <span class="text-sm font-mono text-slate-400">ms di conflitto tra frecce</span>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span class="text-slate-400">Costo Conflitto Accuratezza:</span>
+            <span id="rep-flanker-cost-acc" class="font-bold font-mono text-rose-400">0%</span>
+          </div>
+          <p class="text-[10px] text-slate-500 mt-1">Misura la capacità di inibire i distrattori visivi adiacenti contrastanti rispetto alla freccia bersaglio centrale.</p>
+        </div>
+      </div>
+
+      <!-- Comparative Table: Phase 1 vs Phase 2 Detailed Conditions -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Quadro Comparativo delle 4 Condizioni Sperimentali
+        </h3>
+
+        <div class="overflow-x-auto border border-slate-800 rounded-xl">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-4">Fase &amp; Regola</th>
+                <th class="py-3 px-4">Condizione Stimolo</th>
+                <th class="py-3 px-4">Prove Totali</th>
+                <th class="py-3 px-4 text-emerald-400">Corrette (%)</th>
+                <th class="py-3 px-4 text-rose-400">Errori (%)</th>
+                <th class="py-3 px-4 text-amber-400">Omissioni</th>
+                <th class="py-3 px-4">RT Medio ± SD</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 bg-slate-900/50">
+              <!-- Phase 1: Congruent -->
+              <tr>
+                <td class="py-2.5 px-4 font-bold text-slate-300">FASE 1 (Diretta)</td>
+                <td class="py-2.5 px-4 text-emerald-300">Congruente (←←←←← / →→→→→)</td>
+                <td class="py-2.5 px-4 text-slate-200" id="td-p1-cong-n">0</td>
+                <td class="py-2.5 px-4 font-bold text-emerald-400" id="td-p1-cong-acc">0%</td>
+                <td class="py-2.5 px-4 text-rose-400" id="td-p1-cong-err">0%</td>
+                <td class="py-2.5 px-4 text-slate-400" id="td-p1-cong-om">0</td>
+                <td class="py-2.5 px-4 text-white" id="td-p1-cong-rt">0 ms</td>
+              </tr>
+              <!-- Phase 1: Incongruent -->
+              <tr>
+                <td class="py-2.5 px-4 font-bold text-slate-300">FASE 1 (Diretta)</td>
+                <td class="py-2.5 px-4 text-rose-300">Incongruente (←←→←← / →→←→→)</td>
+                <td class="py-2.5 px-4 text-slate-200" id="td-p1-incong-n">0</td>
+                <td class="py-2.5 px-4 font-bold text-emerald-400" id="td-p1-incong-acc">0%</td>
+                <td class="py-2.5 px-4 text-rose-400" id="td-p1-incong-err">0%</td>
+                <td class="py-2.5 px-4 text-slate-400" id="td-p1-incong-om">0</td>
+                <td class="py-2.5 px-4 text-white" id="td-p1-incong-rt">0 ms</td>
+              </tr>
+              <!-- Phase 2: Congruent -->
+              <tr class="bg-amber-500/5">
+                <td class="py-2.5 px-4 font-bold text-amber-300">FASE 2 (Invertita)</td>
+                <td class="py-2.5 px-4 text-emerald-300">Congruente (Inversione)</td>
+                <td class="py-2.5 px-4 text-slate-200" id="td-p2-cong-n">0</td>
+                <td class="py-2.5 px-4 font-bold text-emerald-400" id="td-p2-cong-acc">0%</td>
+                <td class="py-2.5 px-4 text-rose-400" id="td-p2-cong-err">0%</td>
+                <td class="py-2.5 px-4 text-slate-400" id="td-p2-cong-om">0</td>
+                <td class="py-2.5 px-4 text-white" id="td-p2-cong-rt">0 ms</td>
+              </tr>
+              <!-- Phase 2: Incongruent -->
+              <tr class="bg-amber-500/5">
+                <td class="py-2.5 px-4 font-bold text-amber-300">FASE 2 (Invertita)</td>
+                <td class="py-2.5 px-4 text-rose-300 font-bold">Incongruente (Doppio Conflitto)</td>
+                <td class="py-2.5 px-4 text-slate-200" id="td-p2-incong-n">0</td>
+                <td class="py-2.5 px-4 font-bold text-emerald-400" id="td-p2-incong-acc">0%</td>
+                <td class="py-2.5 px-4 text-rose-400" id="td-p2-incong-err">0%</td>
+                <td class="py-2.5 px-4 text-slate-400" id="td-p2-incong-om">0</td>
+                <td class="py-2.5 px-4 text-white" id="td-p2-incong-rt">0 ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Chronological Trial Audit Log Table -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300">Cronologia Puntuale delle Prove (Trial-by-Trial Log)</h3>
+            <p class="text-xs text-slate-400">Verifica dettagliata delle risposte fornite, del tipo di stimolo e della latenza motoria</p>
+          </div>
+          <span class="text-xs font-mono text-slate-400" id="rep-total-items-badge"></span>
+        </div>
+
+        <div class="overflow-x-auto max-h-72 overflow-y-auto no-scrollbar border border-slate-800 rounded-xl">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider sticky top-0 border-b border-slate-800">
+              <tr>
+                <th class="py-2.5 px-3">#</th>
+                <th class="py-2.5 px-3">Fase</th>
+                <th class="py-2.5 px-3">Configurazione Stimolo</th>
+                <th class="py-2.5 px-3">Bersaglio Centrale</th>
+                <th class="py-2.5 px-3">Condizione</th>
+                <th class="py-2.5 px-3">Tasto Atteso</th>
+                <th class="py-2.5 px-3">Tasto Premuto</th>
+                <th class="py-2.5 px-3">Esito</th>
+                <th class="py-2.5 px-3">Latenza (RT)</th>
+              </tr>
+            </thead>
+            <tbody id="report-trials-tbody" class="divide-y divide-slate-800/60 bg-slate-900/50">
+              <!-- Populated dynamically via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Action Footer: New Session -->
+      <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
+        <button id="btn-new-session" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-amber-600 hover:from-brand-500 hover:to-amber-500 font-bold text-white transition text-sm flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Nuova Valutazione (Reset)
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: INSTRUCTIONS & PARADIGM GUIDE                                      -->
+  <!-- ========================================================================= -->
+  <div id="modal-instructions" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-brand-600/20 text-brand-400 flex items-center justify-center text-sm font-bold">?</span>
+          Flanker Task con Shifting: Istruzioni
+        </h3>
+        <button id="btn-close-instructions" class="text-slate-400 hover:text-white p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+        <p>Il compito valuta l'<strong>inibizione della risposta automatica</strong> e la <strong>flessibilità cognitiva</strong> attraverso un cambio di regola programmato:</p>
+        
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 font-mono text-xs space-y-3">
+          <div>
+            <div class="text-emerald-400 uppercase text-[10px] font-bold mb-1">FASE 1 (Primi 2 minuti): REGOLA DIRETTA</div>
+            <p class="text-slate-300">Guarda sempre e solo la <strong>freccia centrale</strong>:</p>
+            <ul class="list-disc list-inside text-slate-400 mt-1 space-y-0.5">
+              <li>Se vedi <span class="text-white font-bold">&lt;&lt;&lt;&lt;&lt;</span> o <span class="text-white font-bold">&gt;&gt;&lt;&gt;&gt;</span> (centro punta a sinistra) → premi <strong>SINISTRA</strong>.</li>
+              <li>Se vedi <span class="text-white font-bold">&gt;&gt;&gt;&gt;&gt;</span> o <span class="text-white font-bold">&lt;&lt;&gt;&lt;&lt;</span> (centro punta a destra) → premi <strong>DESTRA</strong>.</li>
+            </ul>
+          </div>
+
+          <div class="border-t border-slate-800 pt-2">
+            <div class="text-amber-400 uppercase text-[10px] font-bold mb-1">FASE 2 (Successivi 2 minuti): SHIFTING (REGOLA OPPOSTA)</div>
+            <p class="text-slate-300">Dopo una pausa automatica con conto alla rovescia, la regola si inverte:</p>
+            <ul class="list-disc list-inside text-slate-400 mt-1 space-y-0.5">
+              <li>Se il centro punta a <strong>SINISTRA (←)</strong> → premi <strong>DESTRA</strong>.</li>
+              <li>Se il centro punta a <strong>DESTRA (→)</strong> → premi <strong>SINISTRA</strong>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-400">
+          Rispondi il più velocemente possibile cercando di non commettere errori impulsivi.
+        </p>
+      </div>
+
+      <div class="pt-2">
+        <button id="btn-understood-instructions" class="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 font-semibold text-white transition text-sm">
+          Ho Capito, Chiudi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Box -->
+  <div id="toast-box" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 text-xs font-medium">
+      <span id="toast-icon">✓</span>
+      <span id="toast-message">Notifica</span>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC & PSYCHOMETRIC ENGINE                                    -->
+  <!-- ========================================================================= -->
+  <script>
+    /* Audio Synthesis via Web Audio API */
+    let audioCtx = null;
+    function playTone(freq = 600, duration = 0.08, type = 'sine') {
+      const audioToggle = document.getElementById('cfg-audio-feedback');
+      if (!audioToggle || !audioToggle.checked) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    /* Core Application State */
+    const State = {
+      // Configs
+      patientId: 'PAZIENTE-FT-01',
+      sessionDate: '',
+      clinician: '',
+      p1DurationSec: 120,
+      p2DurationSec: 120,
+      timeoutMs: 2000,
+      isiJitterMode: 'jitter',
+      visualFeedback: true,
+
+      // Runtime State
+      currentPhase: 1, // 1 or 2
+      isRunning: false,
+      isPaused: false,
+      isTransitioning: false,
+      phaseRemainingSec: 120,
+      phaseTimerInterval: null,
+
+      // Active Trial
+      currentTrial: null,
+      trialStartTime: 0,
+      trialActive: false,
+      trialTimeoutId: null,
+      isiTimeoutId: null,
+
+      // Collected Records
+      // Structure: { trialNumber, phase, arrayString, centralTarget, flankerDirection, condition, expectedKey, responseKey, correct, reactionTimeMs, isOmission }
+      trialRecords: []
+    };
+
+    /* Available Flanker Configurations */
+    const FLANKER_CONFIGS = [
+      { central: 'left',  flankers: 'left',  type: 'congruent',   pattern: ['left', 'left', 'left', 'left', 'left'] },
+      { central: 'right', flankers: 'right', type: 'congruent',   pattern: ['right', 'right', 'right', 'right', 'right'] },
+      { central: 'left',  flankers: 'right', type: 'incongruent', pattern: ['right', 'right', 'left', 'right', 'right'] },
+      { central: 'right', flankers: 'left',  type: 'incongruent', pattern: ['left', 'left', 'right', 'left', 'left'] }
+    ];
+
+    function generateNextTrialSpec() {
+      // Pseudorandom selection ensuring 50/50 balanced conditions
+      const template = FLANKER_CONFIGS[Math.floor(Math.random() * FLANKER_CONFIGS.length)];
+      
+      // Determine expected response key based on current Phase rule
+      let expectedKey = '';
+      if (State.currentPhase === 1) {
+        // Direct rule: central direction
+        expectedKey = template.central;
+      } else {
+        // Inverted shifting rule: opposite of central direction
+        expectedKey = template.central === 'left' ? 'right' : 'left';
+      }
+
+      return {
+        phase: State.currentPhase,
+        central: template.central,
+        flankers: template.flankers,
+        type: template.type,
+        pattern: template.pattern,
+        expectedKey: expectedKey,
+        arrayString: template.pattern.map(p => p === 'left' ? '<' : '>').join(' ')
+      };
+    }
+
+    function startFlankerTask() {
+      // Gather inputs
+      State.patientId = document.getElementById('cfg-patient-id').value.trim() || 'ANON-FT';
+      State.sessionDate = document.getElementById('cfg-session-date').value || new Date().toISOString().split('T')[0];
+      State.clinician = document.getElementById('cfg-clinician-name').value.trim() || 'Operatore';
+      State.p1DurationSec = parseInt(document.getElementById('cfg-duration-p1').value, 10) || 120;
+      State.p2DurationSec = parseInt(document.getElementById('cfg-duration-p2').value, 10) || 120;
+      State.timeoutMs = parseInt(document.getElementById('cfg-timeout-ms').value, 10) || 2000;
+      State.isiJitterMode = document.getElementById('cfg-isi-jitter').value;
+      State.visualFeedback = document.getElementById('cfg-visual-feedback').checked;
+
+      // Reset state
+      State.currentPhase = 1;
+      State.phaseRemainingSec = State.p1DurationSec;
+      State.trialRecords = [];
+      State.isRunning = true;
+      State.isPaused = false;
+      State.isTransitioning = false;
+
+      // Update UI views
+      document.getElementById('view-setup').classList.add('hidden');
+      document.getElementById('view-report').classList.add('hidden');
+      document.getElementById('view-test').classList.remove('hidden');
+      document.getElementById('status-pill').textContent = 'Fase 1 Attiva';
+      document.getElementById('status-pill').className = 'text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-mono border border-emerald-500/20';
+
+      updatePhaseHeaderUI();
+      updateTimerDisplay();
+
+      // Launch Phase Timer
+      clearInterval(State.phaseTimerInterval);
+      State.phaseTimerInterval = setInterval(handleClockTick, 1000);
+
+      // Present first fixation and item
+      scheduleNextTrial(600);
+    }
+
+    function updatePhaseHeaderUI() {
+      const badge = document.getElementById('test-phase-badge');
+      const text = document.getElementById('test-phase-text');
+      const reminder = document.getElementById('test-rule-reminder');
+
+      if (State.currentPhase === 1) {
+        badge.className = 'px-3 py-1 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs sm:text-sm font-bold font-mono uppercase tracking-wide flex items-center gap-2';
+        text.textContent = 'FASE 1: RISPOSTA DIRETTA';
+        reminder.textContent = '(Centro = Stessa Direzione)';
+      } else {
+        badge.className = 'px-3 py-1 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 text-xs sm:text-sm font-bold font-mono uppercase tracking-wide flex items-center gap-2';
+        text.textContent = 'FASE 2: RISPOSTA OPPOSTA (SHIFTING)';
+        reminder.textContent = '(Centro = Direzione Contraria!)';
+      }
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(State.phaseRemainingSec / 60);
+      const s = State.phaseRemainingSec % 60;
+      document.getElementById('test-timer-display').textContent = 
+        `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function handleClockTick() {
+      if (!State.isRunning || State.isPaused || State.isTransitioning) return;
+
+      State.phaseRemainingSec--;
+      updateTimerDisplay();
+
+      if (State.phaseRemainingSec <= 0) {
+        if (State.currentPhase === 1) {
+          triggerShiftingTransition();
+        } else {
+          finishFlankerTask();
+        }
+      }
+    }
+
+    function triggerShiftingTransition() {
+      State.isTransitioning = true;
+      State.trialActive = false;
+      clearTimeout(State.trialTimeoutId);
+      clearTimeout(State.isiTimeoutId);
+
+      // Hide stimulus elements
+      document.getElementById('flanker-array').classList.add('hidden');
+      document.getElementById('fixation-cross').classList.remove('hidden');
+
+      // Show Shift Overlay
+      const overlay = document.getElementById('shift-overlay');
+      overlay.classList.remove('hidden');
+      
+      playTone(440, 0.25, 'triangle');
+
+      let countdown = 5;
+      const countDisplay = document.getElementById('shift-countdown');
+      countDisplay.textContent = countdown;
+
+      const countInterval = setInterval(() => {
+        countdown--;
+        countDisplay.textContent = countdown;
+        if (countdown > 0) {
+          playTone(520, 0.08, 'sine');
+        } else {
+          clearInterval(countInterval);
+          overlay.classList.add('hidden');
+          
+          // Switch to Phase 2
+          State.currentPhase = 2;
+          State.phaseRemainingSec = State.p2DurationSec;
+          State.isTransitioning = false;
+
+          document.getElementById('status-pill').textContent = 'Fase 2 Attiva';
+          document.getElementById('status-pill').className = 'text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 font-mono border border-amber-500/20';
+
+          updatePhaseHeaderUI();
+          updateTimerDisplay();
+
+          playTone(880, 0.18, 'sine');
+          scheduleNextTrial(600);
+        }
+      }, 1000);
+    }
+
+    function scheduleNextTrial(delayMs) {
+      if (!State.isRunning || State.isTransitioning) return;
+
+      // Show fixation cross
+      const fixation = document.getElementById('fixation-cross');
+      const arrayContainer = document.getElementById('flanker-array');
+      fixation.classList.remove('hidden');
+      arrayContainer.classList.add('hidden');
+
+      clearTimeout(State.isiTimeoutId);
+      State.isiTimeoutId = setTimeout(() => {
+        presentTrial();
+      }, delayMs);
+    }
+
+    function presentTrial() {
+      if (!State.isRunning || State.isTransitioning) return;
+
+      const spec = generateNextTrialSpec();
+      State.currentTrial = spec;
+      State.trialActive = true;
+
+      // Hide fixation and render arrow SVG components
+      const fixation = document.getElementById('fixation-cross');
+      const arrayContainer = document.getElementById('flanker-array');
+      fixation.classList.add('hidden');
+      arrayContainer.innerHTML = '';
+      arrayContainer.classList.remove('hidden');
+
+      spec.pattern.forEach((dir, idx) => {
+        const isCenter = idx === 2;
+        const arrowSvg = createArrowSvg(dir, isCenter);
+        arrayContainer.appendChild(arrowSvg);
+      });
+
+      State.trialStartTime = performance.now();
+
+      // Setup response timeout (Omission)
+      clearTimeout(State.trialTimeoutId);
+      State.trialTimeoutId = setTimeout(() => {
+        if (State.trialActive) {
+          handleResponse(null, true);
+        }
+      }, State.timeoutMs);
+    }
+
+    function createArrowSvg(direction, isCenter) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `flex items-center justify-center ${isCenter ? 'scale-125 z-10' : 'opacity-85'}`;
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('class', `w-12 h-12 sm:w-16 sm:h-16 arrow-icon ${isCenter ? 'text-brand-400' : 'text-slate-200'}`);
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('stroke', 'currentColor');
+      svg.setAttribute('stroke-width', isCenter ? '2.8' : '2.2');
+      svg.setAttribute('stroke-linecap', 'round');
+      svg.setAttribute('stroke-linejoin', 'round');
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      if (direction === 'left') {
+        path.setAttribute('d', 'M19 12H5m7 7l-7-7 7-7');
+      } else {
+        path.setAttribute('d', 'M5 12h14m-7 7l7-7-7-7');
+      }
+
+      svg.appendChild(path);
+      wrapper.appendChild(svg);
+      return wrapper;
+    }
+
+    function handleResponse(chosenKey, isTimeout = false) {
+      if (!State.trialActive) return;
+      State.trialActive = false;
+      clearTimeout(State.trialTimeoutId);
+
+      const endTime = performance.now();
+      const rt = isTimeout ? null : Math.round(endTime - State.trialStartTime);
+      const trial = State.currentTrial;
+      const isCorrect = !isTimeout && (chosenKey === trial.expectedKey);
+
+      // Record trial data
+      State.trialRecords.push({
+        trialNumber: State.trialRecords.length + 1,
+        phase: trial.phase,
+        arrayString: trial.arrayString,
+        centralTarget: trial.central,
+        flankerDirection: trial.flankers,
+        condition: trial.type,
+        expectedKey: trial.expectedKey,
+        responseKey: chosenKey || 'OMISSIONE',
+        correct: isCorrect,
+        reactionTimeMs: rt,
+        isOmission: isTimeout
+      });
+
+      // Visual feedback dot / flash
+      if (State.visualFeedback) {
+        const dot = document.getElementById('feedback-dot');
+        dot.className = `mt-8 w-3.5 h-3.5 rounded-full transition-opacity duration-100 ${isCorrect ? 'bg-emerald-400 shadow-lg shadow-emerald-400/50' : 'bg-rose-500 shadow-lg shadow-rose-500/50'}`;
+        dot.style.opacity = '1';
+        setTimeout(() => { dot.style.opacity = '0'; }, 140);
+      }
+
+      if (isCorrect) {
+        playTone(700, 0.04, 'sine');
+      } else if (!isTimeout) {
+        playTone(280, 0.07, 'sawtooth');
+      }
+
+      // Schedule Next Fixation after Jittered ISI
+      let nextIsiMs = 500;
+      if (State.isiJitterMode === 'jitter') {
+        nextIsiMs = Math.floor(Math.random() * (800 - 400 + 1)) + 400;
+      }
+      scheduleNextTrial(nextIsiMs);
+    }
+
+    function finishFlankerTask() {
+      State.isRunning = false;
+      State.trialActive = false;
+      clearInterval(State.phaseTimerInterval);
+      clearTimeout(State.trialTimeoutId);
+      clearTimeout(State.isiTimeoutId);
+
+      // Switch to report view
+      document.getElementById('view-test').classList.add('hidden');
+      document.getElementById('view-report').classList.remove('hidden');
+      document.getElementById('status-pill').textContent = 'Completato';
+      document.getElementById('status-pill').className = 'text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 font-mono border border-slate-700';
+
+      playTone(523.25, 0.25, 'triangle');
+      renderClinicalReport();
+    }
+
+    function renderClinicalReport() {
+      const records = State.trialRecords;
+
+      // Partition trials into Phase 1 and Phase 2
+      const p1 = records.filter(r => r.phase === 1);
+      const p2 = records.filter(r => r.phase === 2);
+
+      // Partition into Congruent vs Incongruent
+      const p1Cong = p1.filter(r => r.condition === 'congruent');
+      const p1Incong = p1.filter(r => r.condition === 'incongruent');
+      const p2Cong = p2.filter(r => r.condition === 'congruent');
+      const p2Incong = p2.filter(r => r.condition === 'incongruent');
+
+      function getStats(subset) {
+        const total = subset.length;
+        if (total === 0) return { total: 0, accPct: 0, errPct: 0, omissions: 0, meanRt: 0, sdRt: 0 };
+        const corrects = subset.filter(r => r.correct);
+        const omissions = subset.filter(r => r.isOmission).length;
+        const errors = total - corrects.length - omissions;
+        
+        const rts = corrects.map(r => r.reactionTimeMs).filter(rt => rt != null);
+        let meanRt = 0;
+        let sdRt = 0;
+        if (rts.length > 0) {
+          meanRt = Math.round(rts.reduce((a, b) => a + b, 0) / rts.length);
+          const variance = rts.reduce((sum, v) => sum + Math.pow(v - meanRt, 2), 0) / rts.length;
+          sdRt = Math.round(Math.sqrt(variance));
+        }
+
+        return {
+          total,
+          accPct: Math.round((corrects.length / total) * 100),
+          errPct: Math.round((errors / total) * 100),
+          omissions,
+          meanRt,
+          sdRt
+        };
+      }
+
+      const s1C = getStats(p1Cong);
+      const s1I = getStats(p1Incong);
+      const s2C = getStats(p2Cong);
+      const s2I = getStats(p2Incong);
+
+      const s1All = getStats(p1);
+      const s2All = getStats(p2);
+
+      // Flanker Interference Effect (Incongruent RT − Congruent RT across Phase 1)
+      const flankerCostRt = (s1I.meanRt > 0 && s1C.meanRt > 0) ? (s1I.meanRt - s1C.meanRt) : 0;
+      const flankerCostAcc = (s1C.accPct - s1I.accPct);
+
+      // Shifting Cost (Phase 2 RT − Phase 1 RT overall)
+      const switchCostRt = (s2All.meanRt > 0 && s1All.meanRt > 0) ? (s2All.meanRt - s1All.meanRt) : 0;
+      const switchCostAcc = (s1All.accPct - s2All.accPct);
+
+      // Set Metadata Headers
+      document.getElementById('report-patient-label').textContent = State.patientId;
+      document.getElementById('report-clinician-label').textContent = State.clinician;
+      document.getElementById('report-date-badge').textContent = `Data: ${State.sessionDate}`;
+
+      // Set Main Executive Cost Metrics
+      document.getElementById('rep-switch-cost-rt').textContent = switchCostRt >= 0 ? `+ ${switchCostRt}` : `${switchCostRt}`;
+      document.getElementById('rep-switch-cost-acc').textContent = `${switchCostAcc >= 0 ? '-' : '+'}${Math.abs(switchCostAcc)}%`;
+
+      document.getElementById('rep-flanker-cost-rt').textContent = flankerCostRt >= 0 ? `+ ${flankerCostRt}` : `${flankerCostRt}`;
+      document.getElementById('rep-flanker-cost-acc').textContent = `-${Math.max(0, flankerCostAcc)}%`;
+
+      // Fill 4-Condition Comparative Table
+      document.getElementById('td-p1-cong-n').textContent = s1C.total;
+      document.getElementById('td-p1-cong-acc').textContent = `${s1C.accPct}%`;
+      document.getElementById('td-p1-cong-err').textContent = `${s1C.errPct}%`;
+      document.getElementById('td-p1-cong-om').textContent = s1C.omissions;
+      document.getElementById('td-p1-cong-rt').textContent = s1C.meanRt > 0 ? `${s1C.meanRt} ± ${s1C.sdRt} ms` : '---';
+
+      document.getElementById('td-p1-incong-n').textContent = s1I.total;
+      document.getElementById('td-p1-incong-acc').textContent = `${s1I.accPct}%`;
+      document.getElementById('td-p1-incong-err').textContent = `${s1I.errPct}%`;
+      document.getElementById('td-p1-incong-om').textContent = s1I.omissions;
+      document.getElementById('td-p1-incong-rt').textContent = s1I.meanRt > 0 ? `${s1I.meanRt} ± ${s1I.sdRt} ms` : '---';
+
+      document.getElementById('td-p2-cong-n').textContent = s2C.total;
+      document.getElementById('td-p2-cong-acc').textContent = `${s2C.accPct}%`;
+      document.getElementById('td-p2-cong-err').textContent = `${s2C.errPct}%`;
+      document.getElementById('td-p2-cong-om').textContent = s2C.omissions;
+      document.getElementById('td-p2-cong-rt').textContent = s2C.meanRt > 0 ? `${s2C.meanRt} ± ${s2C.sdRt} ms` : '---';
+
+      document.getElementById('td-p2-incong-n').textContent = s2I.total;
+      document.getElementById('td-p2-incong-acc').textContent = `${s2I.accPct}%`;
+      document.getElementById('td-p2-incong-err').textContent = `${s2I.errPct}%`;
+      document.getElementById('td-p2-incong-om').textContent = s2I.omissions;
+      document.getElementById('td-p2-incong-rt').textContent = s2I.meanRt > 0 ? `${s2I.meanRt} ± ${s2I.sdRt} ms` : '---';
+
+      document.getElementById('rep-total-items-badge').textContent = `Totale Prove: ${records.length}`;
+
+      // Populate Trial-by-Trial Table
+      const tbody = document.getElementById('report-trials-tbody');
+      tbody.innerHTML = '';
+
+      records.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/40 transition-colors';
+
+        let badgeClass = '';
+        let badgeText = '';
+        if (r.correct) {
+          badgeClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+          badgeText = 'CORRETTO ✓';
+        } else if (r.isOmission) {
+          badgeClass = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+          badgeText = 'OMISSIONE';
+        } else {
+          badgeClass = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+          badgeText = 'ERRORE ✗';
+        }
+
+        const isP2 = r.phase === 2;
+
+        tr.innerHTML = `
+          <td class="py-2 px-3 text-slate-500">${String(r.trialNumber).padStart(3, '0')}</td>
+          <td class="py-2 px-3 ${isP2 ? 'text-amber-400 font-bold' : 'text-slate-300'}">Fase ${r.phase}</td>
+          <td class="py-2 px-3 font-bold text-white tracking-widest">${r.arrayString}</td>
+          <td class="py-2 px-3 text-brand-300 uppercase">${r.centralTarget}</td>
+          <td class="py-2 px-3 ${r.condition === 'incongruent' ? 'text-rose-400' : 'text-emerald-400'}">${r.condition}</td>
+          <td class="py-2 px-3 uppercase text-slate-300 font-semibold">${r.expectedKey}</td>
+          <td class="py-2 px-3 uppercase ${r.correct ? 'text-emerald-400' : 'text-rose-400 font-bold'}">${r.responseKey}</td>
+          <td class="py-2 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-medium border ${badgeClass}">${badgeText}</span></td>
+          <td class="py-2 px-3 text-slate-300">${r.reactionTimeMs ? `${r.reactionTimeMs} ms` : '---'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function copyReportToClipboard() {
+      const records = State.trialRecords;
+      const p1 = records.filter(r => r.phase === 1);
+      const p2 = records.filter(r => r.phase === 2);
+
+      const p1Corr = p1.filter(r => r.correct).length;
+      const p2Corr = p2.filter(r => r.correct).length;
+
+      const p1Acc = p1.length > 0 ? Math.round((p1Corr / p1.length) * 100) : 0;
+      const p2Acc = p2.length > 0 ? Math.round((p2Corr / p2.length) * 100) : 0;
+
+      const switchCostRt = document.getElementById('rep-switch-cost-rt').textContent;
+      const flankerCostRt = document.getElementById('rep-flanker-cost-rt').textContent;
+
+      const reportText = `=== REPORT CLINICO: FLANKER TASK CON SHIFTING ===
+Paziente / Codice: ${State.patientId}
+Data Sessione: ${State.sessionDate}
+Operatore: ${State.clinician}
+Totale Prove Registrate: ${records.length}
+
+FASI SPERIMENTALI:
+- Fase 1 (Regola Diretta): ${p1Corr}/${p1.length} Corrette (${p1Acc}%)
+- Fase 2 (Regola Invertita / Shifting): ${p2Corr}/${p2.length} Corrette (${p2Acc}%)
+
+INDICI DI CONTROLLO ESECUTIVO:
+- Costo di Shifting (Switch Cost RT): ${switchCostRt} ms
+- Costo Effetto Flanker (Interferenza RT): ${flankerCostRt} ms
+=================================================`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(reportText).then(() => {
+          showToast('Report copiato negli appunti!');
+        }).catch(() => fallbackCopyText(reportText));
+      } else {
+        fallbackCopyText(reportText);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Report copiato negli appunti!');
+    }
+
+    function showToast(message) {
+      const box = document.getElementById('toast-box');
+      document.getElementById('toast-message').textContent = message;
+      box.classList.remove('translate-y-20', 'opacity-0');
+      box.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        box.classList.remove('translate-y-0', 'opacity-100');
+        box.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    /* Event Listeners Initialization */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set today's date
+      const dateInput = document.getElementById('cfg-session-date');
+      if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+
+      // Start Button
+      document.getElementById('btn-start-test').addEventListener('click', startFlankerTask);
+
+      // On-screen Response Buttons
+      document.getElementById('btn-resp-left').addEventListener('click', (e) => {
+        e.preventDefault();
+        handleResponse('left');
+      });
+      document.getElementById('btn-resp-right').addEventListener('click', (e) => {
+        e.preventDefault();
+        handleResponse('right');
+      });
+
+      // Keyboard Controls (ArrowLeft & ArrowRight)
+      window.addEventListener('keydown', (e) => {
+        if (!State.isRunning || State.isTransitioning || !State.trialActive) return;
+
+        if (e.code === 'ArrowLeft' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          handleResponse('left');
+        } else if (e.code === 'ArrowRight' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          handleResponse('right');
+        }
+      });
+
+      // Abort Session
+      document.getElementById('btn-abort-test').addEventListener('click', () => {
+        if (confirm('Sei sicuro di voler interrompere anticipatamente la sessione?')) {
+          finishFlankerTask();
+        }
+      });
+
+      // Report Buttons
+      document.getElementById('btn-copy-report').addEventListener('click', copyReportToClipboard);
+      document.getElementById('btn-print-report').addEventListener('click', () => window.print());
+
+      // Reset / New Session
+      document.getElementById('btn-new-session').addEventListener('click', () => {
+        document.getElementById('view-report').classList.add('hidden');
+        document.getElementById('view-setup').classList.remove('hidden');
+        document.getElementById('status-pill').textContent = 'In Attesa';
+        document.getElementById('status-pill').className = 'text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 font-mono border border-slate-700/60';
+      });
+
+      // Instructions Modal
+      const modal = document.getElementById('modal-instructions');
+      document.getElementById('nav-btn-instructions').addEventListener('click', () => modal.classList.remove('hidden'));
+      document.getElementById('btn-close-instructions').addEventListener('click', () => modal.classList.add('hidden'));
+      document.getElementById('btn-understood-instructions').addEventListener('click', () => modal.classList.add('hidden'));
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.add('hidden');
+      });
+    });
+  </script>
+</body>
+</html>
